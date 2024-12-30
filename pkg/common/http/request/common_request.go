@@ -35,8 +35,8 @@ type FilteredRequest struct {
 }
 
 type ListRequest struct {
-	Page    int `query:"page" validate:"required"`
-	PerPage int `query:"per_page" validate:"required"`
+	Page    int `query:"page"`
+	PerPage int `query:"per_page"`
 	FilteredRequest
 }
 
