@@ -241,7 +241,6 @@ func Base64Validator(fl validator.FieldLevel) bool {
 	return false
 }
 
-// Decode Base64 (helper function for validation)
 func decodeBase64(str string) ([]byte, error) {
 	return []byte(str), nil
 }
