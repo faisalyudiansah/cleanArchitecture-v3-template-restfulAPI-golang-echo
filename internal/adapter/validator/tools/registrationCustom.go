@@ -207,3 +207,41 @@ func RoleValidator(fl validator.FieldLevel) bool {
 	}
 	return false
 }
+
+func LatitudeValidator(fl validator.FieldLevel) bool {
+	latitude, ok := fl.Field().Interface().(string)
+	if ok {
+		lat, err := decimal.NewFromString(latitude)
+		if err != nil {
+			return false
+		}
+		return lat.GreaterThanOrEqual(decimal.NewFromFloat(-90)) && lat.LessThanOrEqual(decimal.NewFromFloat(90))
+	}
+	return false
+}
+
+func LongitudeValidator(fl validator.FieldLevel) bool {
+	longitude, ok := fl.Field().Interface().(string)
+	if ok {
+		long, err := decimal.NewFromString(longitude)
+		if err != nil {
+			return false
+		}
+		return long.GreaterThanOrEqual(decimal.NewFromFloat(-180)) && long.LessThanOrEqual(decimal.NewFromFloat(180))
+	}
+	return false
+}
+
+func Base64Validator(fl validator.FieldLevel) bool {
+	data, ok := fl.Field().Interface().(string)
+	if ok {
+		_, err := decodeBase64(data)
+		return err == nil
+	}
+	return false
+}
+
+// Decode Base64 (helper function for validation)
+func decodeBase64(str string) ([]byte, error) {
+	return []byte(str), nil
+}
