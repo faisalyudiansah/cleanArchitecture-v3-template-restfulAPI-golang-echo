@@ -34,7 +34,7 @@ func (c *ExampleController) logError(err error, msg string) {
 func (c *ExampleController) Get(ctx echo.Context) error {
 	request := &httprequest.ListRequest{}
 	if err := ctx.Bind(request); err != nil {
-		c.logError(err, "error binding")
+		c.logError(err, constant.ErrBindingRequest)
 		return err
 	}
 	res, err := c.ExampleUsecase.Get(request)

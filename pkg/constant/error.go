@@ -2,6 +2,7 @@ package constant
 
 const (
 	EntityNotFoundErrorMessage        = "%s not found"
+	ErrBindingRequest                 = "error when binding proccess"
 	ErrValidateRequest                = "failed to validate request"
 	ErrDecodeFilterRequest            = "failed to decode filter request"
 	RequestTimeoutErrorMessage        = "failed to process request in time, please try again"
