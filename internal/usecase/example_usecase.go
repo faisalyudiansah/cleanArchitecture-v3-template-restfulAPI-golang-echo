@@ -8,6 +8,9 @@ import (
 	"server/pkg/apperror"
 	httprequest "server/pkg/common/http/request"
 	httpresponse "server/pkg/common/http/response"
+	"server/pkg/constant"
+
+	"github.com/pkg/errors"
 )
 
 type ExampleUsecaseInterface interface {
@@ -41,12 +44,13 @@ func (tu *ExampleUsecase) logError(err error, msg string) {
 
 func (tu *ExampleUsecase) Get(req *httprequest.ListRequest) (*httpresponse.PaginatedReponse[*httpresponse.ResponseData], error) {
 	if err := tu.Validator.Validate(req); err != nil {
-		tu.logError(err, "failed to validate request")
+		tu.logError(err, constant.ErrValidateRequest)
 		return nil, err
 	}
 	if err := req.DecodeFilters(); err != nil {
-		tu.logError(err, "failed to decode filters")
-		return nil, err
+		formatErr := errors.Wrap(err, constant.ErrDecodeFilterRequest)
+		tu.logError(formatErr, constant.ErrDecodeFilterRequest)
+		return nil, apperror.NewAppError(http.StatusUnprocessableEntity, formatErr.Error(), formatErr)
 	}
 	if err := tu.ExampleRepository.Get(req); err != nil {
 		errMessage := "failed to get data"

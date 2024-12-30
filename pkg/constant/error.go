@@ -2,6 +2,8 @@ package constant
 
 const (
 	EntityNotFoundErrorMessage        = "%s not found"
+	ErrValidateRequest                = "failed to validate request"
+	ErrDecodeFilterRequest            = "failed to decode filter request"
 	RequestTimeoutErrorMessage        = "failed to process request in time, please try again"
 	UnauthorizedErrorMessage          = "unauthorized"
 	EOFErrorMessage                   = "missing body request"

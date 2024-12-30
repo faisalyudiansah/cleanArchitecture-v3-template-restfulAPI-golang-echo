@@ -45,7 +45,7 @@ func (c *ExampleController) Get(ctx echo.Context) error {
 		if appErr, ok := err.(*apperror.AppError); ok {
 			return ctx.JSON(appErr.Code, appErr)
 		}
-		return echo.NewHTTPError(http.StatusInternalServerError, constant.UnexpectedErrorOccurred).SetInternal(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, constant.InternalServerErrorMessage).SetInternal(err)
 	}
 	return ctx.JSON(http.StatusOK, res)
 }
