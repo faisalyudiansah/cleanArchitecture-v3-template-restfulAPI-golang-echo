@@ -1,0 +1,51 @@
+name: Build & Push Development Image
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  IMAGE_NAME: server
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.22.9"
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Create .env file
+        run: echo "${{ secrets.DEV_ENV }}" > .enva
+
+      - name: Log in to Private Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.HARBOR_URL }}
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+
+      - name: Get current date
+        id: date
+        env:
+          TZ: "Asia/Jakarta"
+        run: echo "date=$(date +'%Y.%m.%d.%H.%M')" >> $GITHUB_OUTPUT
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.event_name == 'push' }}
+          tags: |
+            ${{ secrets.HARBOR_URL }}/server_sit/${{ env.IMAGE_NAME }}:development
+            ${{ secrets.HARBOR_URL }}/server_sit/${{ env.IMAGE_NAME }}:${{ steps.date.outputs.date }}

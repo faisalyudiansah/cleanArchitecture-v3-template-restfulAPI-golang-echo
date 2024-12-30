@@ -1,0 +1,9 @@
+public/logs
+**/.env
+**/.DS_Store
+tmp
+*.out
+*.tree
+.claudesync/*
+.idea/
+.vscode/

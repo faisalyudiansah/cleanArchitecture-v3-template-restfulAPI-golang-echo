@@ -1,0 +1,23 @@
+name: Go Build
+on:
+  pull_request:
+    branches: ["master"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.22"
+          cache: true
+      - name: Create .env file
+        run: echo "${{ secrets.DEV_ENV }}" > .env
+      - name: Install dependencies
+        run: go mod download
+      - name: Build binaries
+        run: |
+          mkdir -p build
+          CGO_ENABLED=0 go build -o build/web ./cmd/web/main.go
+          CGO_ENABLED=0 go build -o build/web ./cmd/worker/main.go
