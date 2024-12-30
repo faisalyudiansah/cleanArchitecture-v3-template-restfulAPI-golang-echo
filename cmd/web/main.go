@@ -70,6 +70,7 @@ func main() {
 
 	// Create web server
 	e := echo.New()
+	e.HTTPErrorHandler = httpmiddleware.ErrorHandler
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(
 		httpmiddleware.RequestID,

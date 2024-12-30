@@ -1,13 +1,13 @@
 package usecase
 
 import (
+	"net/http"
 	"server/internal/adapter/repository"
 	"server/internal/adapter/validator"
 	"server/internal/infrastructure/logger"
+	"server/pkg/apperror"
 	httprequest "server/pkg/common/http/request"
 	httpresponse "server/pkg/common/http/response"
-
-	"github.com/pkg/errors"
 )
 
 type ExampleUsecaseInterface interface {
@@ -41,20 +41,17 @@ func (tu *ExampleUsecase) logError(err error, msg string) {
 
 func (tu *ExampleUsecase) Get(req *httprequest.ListRequest) (*httpresponse.PaginatedReponse[*httpresponse.ResponseData], error) {
 	if err := tu.Validator.Validate(req); err != nil {
-		errMessage := "failed to validate list request"
-		validationErrors := tu.Validator.ParseValidationErrors(err)
-		tu.logError(validationErrors, errMessage)
-		return nil, validationErrors
+		tu.logError(err, "failed to validate request")
+		return nil, err
 	}
 	if err := req.DecodeFilters(); err != nil {
-		errMessage := "failed to decode list filters"
-		tu.logError(err, errMessage)
+		tu.logError(err, "failed to decode filters")
 		return nil, err
 	}
 	if err := tu.ExampleRepository.Get(req); err != nil {
 		errMessage := "failed to get data"
 		tu.logError(err, errMessage)
-		return nil, errors.Wrap(err, errMessage)
+		return nil, apperror.NewAppError(http.StatusInternalServerError, err.Error(), err)
 	}
 	res := []*httpresponse.ResponseData{
 		{

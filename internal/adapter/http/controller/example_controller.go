@@ -1,16 +1,15 @@
 package controller
 
 import (
-	"errors"
 	"net/http"
-	validatormodel "server/internal/adapter/validator/model"
 	"server/internal/infrastructure/logger"
 	"server/internal/usecase"
+	"server/pkg/apperror"
 	httprequest "server/pkg/common/http/request"
-	httpresponse "server/pkg/common/http/response"
+	"server/pkg/constant"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
 type ExampleController struct {
@@ -35,27 +34,18 @@ func (c *ExampleController) logError(err error, msg string) {
 func (c *ExampleController) Get(ctx echo.Context) error {
 	request := &httprequest.ListRequest{}
 	if err := ctx.Bind(request); err != nil {
-		errResponse := &httpresponse.ErrorResponse{}
-		c.logError(err, errResponse.Message)
-		return errResponse.EchoJsonResponse(ctx)
+		c.logError(err, "error binding")
+		return err
 	}
 	res, err := c.ExampleUsecase.Get(request)
 	if err != nil {
-		errResponse := &httpresponse.ErrorResponse{}
-		errResponse.Message = "something error"
-		if errs, ok := err.(validatormodel.ValidationErrors); ok {
-			errResponse.Error = errs.ToResponseErrors()
-			errResponse.Code = http.StatusBadRequest
-		} else if errors.Is(err, gorm.ErrRecordNotFound) {
-			errResponse.Code = http.StatusNotFound
-			errResponse.Message = "NOT FOUND"
-			errResponse.Error = err.Error()
-		} else {
-			errResponse.Error = err.Error()
-			errResponse.Code = http.StatusInternalServerError
+		if errs, ok := err.(validator.ValidationErrors); ok {
+			return echo.NewHTTPError(http.StatusUnprocessableEntity, errs).SetInternal(err)
 		}
-		c.Logger.Logger.WithError(err).Error(errResponse.Message)
-		return errResponse.EchoJsonResponse(ctx)
+		if appErr, ok := err.(*apperror.AppError); ok {
+			return ctx.JSON(appErr.Code, appErr)
+		}
+		return echo.NewHTTPError(http.StatusInternalServerError, constant.UnexpectedErrorOccurred).SetInternal(err)
 	}
 	return ctx.JSON(http.StatusOK, res)
 }

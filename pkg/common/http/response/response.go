@@ -24,7 +24,13 @@ type ErrorResponse struct {
 
 type DataResponse[T any] struct {
 	Response
-	Data T `json:"data,omitempty"`
+	Data   T            `json:"data,omitempty"`
+	Errors []FieldError `json:"errors,omitempty"`
+}
+
+type FieldError struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
 }
 
 type PaginatedReponse[T any] struct {

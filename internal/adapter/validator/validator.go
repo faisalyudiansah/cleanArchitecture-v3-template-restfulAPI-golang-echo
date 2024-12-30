@@ -4,18 +4,15 @@ import (
 	"fmt"
 
 	model "server/internal/adapter/validator/model"
+	"server/internal/adapter/validator/tools"
 
 	"github.com/go-playground/validator/v10"
 )
 
-// CustomValidator represents echo's custom validator
 type CustomValidator struct {
 	Validator *validator.Validate
 }
 
-// Validate validate struct.
-// This method adds chain function functionality to *echo.Context instance.
-// So we can use it like: *echo.Context.Validate(i interface{})
 func (v *CustomValidator) Validate(i interface{}) error {
 	if err := v.Validator.Struct(i); err != nil {
 		return err
@@ -23,7 +20,6 @@ func (v *CustomValidator) Validate(i interface{}) error {
 	return nil
 }
 
-// ParseValidationErrors parse validation errors into new ValidationError
 func (v *CustomValidator) ParseValidationErrors(err error) error {
 	var errs model.ValidationErrors
 
@@ -53,6 +49,7 @@ func (v *CustomValidator) ParseValidationErrors(err error) error {
 
 func NewValidator() *CustomValidator {
 	v := validator.New()
+	v.RegisterTagNameFunc(tools.TagNameFormatter)
 	registerCommonRules(v)
 	return &CustomValidator{
 		Validator: v,
