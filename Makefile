@@ -18,17 +18,17 @@ migratecreate:
 
 migrateforce:
 	@migrate -path ${CURDIR}/db/migrations/ \
-		-database "mysql://${MYSQL_READ_USER}:${MYSQL_READ_PASS}@tcp(${MYSQL_READ_HOST}:${MYSQL_READ_PORT})/${MYSQL_READ_DBNAME}" \
+		-database "mysql://${MYSQL_READ_USER}:${MYSQL_READ_PASS}@tcp(${MYSQL_READ_HOST}:${MYSQL_READ_PORT})/${MYSQL_READ_DBNAME}?tls=${MYSQL_READ_USE_TLS}&tidb_skip_isolation_level_check=1" \
 		-verbose force 1
 
 migratedown:
 	@migrate -path ${CURDIR}/db/migrations/ \
-		-database "mysql://${MYSQL_READ_USER}:${MYSQL_READ_PASS}@tcp(${MYSQL_READ_HOST}:${MYSQL_READ_PORT})/${MYSQL_READ_DBNAME}" \
+		-database "mysql://${MYSQL_READ_USER}:${MYSQL_READ_PASS}@tcp(${MYSQL_READ_HOST}:${MYSQL_READ_PORT})/${MYSQL_READ_DBNAME}?tls=${MYSQL_READ_USE_TLS}&tidb_skip_isolation_level_check=1" \
 		-verbose down
 
 migrateup:
 	@migrate -path ${CURDIR}/db/migrations/ \
-		-database "mysql://${MYSQL_READ_USER}:${MYSQL_READ_PASS}@tcp(${MYSQL_READ_HOST}:${MYSQL_READ_PORT})/${MYSQL_READ_DBNAME}" \
+		-database "mysql://${MYSQL_READ_USER}:${MYSQL_READ_PASS}@tcp(${MYSQL_READ_HOST}:${MYSQL_READ_PORT})/${MYSQL_READ_DBNAME}?tls=${MYSQL_READ_USE_TLS}&tidb_skip_isolation_level_check=1" \
 		-verbose up
 
 SEED_SCRIPT = ${CURDIR}/db/seeds/seed.sh
