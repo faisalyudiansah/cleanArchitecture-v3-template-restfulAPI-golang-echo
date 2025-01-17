@@ -1,0 +1,20 @@
+DROP TABLE IF EXISTS `m_customer_items` CASCADE;
+DROP TABLE IF EXISTS `m_customer_addresses` CASCADE;
+DROP TABLE IF EXISTS `m_uom_conversions` CASCADE;
+DROP TABLE IF EXISTS `m_item_uoms` CASCADE;
+DROP TABLE IF EXISTS `m_items` CASCADE;
+DROP TABLE IF EXISTS `m_item_subcategories` CASCADE;
+DROP TABLE IF EXISTS `m_item_categories` CASCADE;
+DROP TABLE IF EXISTS `m_customers` CASCADE;
+DROP TABLE IF EXISTS `m_customer_groups` CASCADE;
+DROP TABLE IF EXISTS `m_item_groups` CASCADE;
+DROP TABLE IF EXISTS `m_term_of_payments` CASCADE;
+DROP TABLE IF EXISTS `m_uoms` CASCADE;
+DROP TABLE IF EXISTS `m_areas` CASCADE;
+DROP TABLE IF EXISTS `m_warehouses` CASCADE;
+DROP TABLE IF EXISTS `m_warehouse_service_areas` CASCADE;
+DROP TABLE IF EXISTS `t_inventories` CASCADE;
+DROP TABLE IF EXISTS `m_batches` CASCADE;
+DROP TABLE IF EXISTS `m_stock_types` CASCADE;
+DROP TABLE IF EXISTS `r_supplier_items` CASCADE;
+
